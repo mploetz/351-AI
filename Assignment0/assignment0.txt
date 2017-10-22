@@ -1,0 +1,9 @@
+2)
+Probability of Dice:
+a) 1/6
+b) 4/36
+Deck of Cards:
+a) 4/52
+b) 3/51
+c) 1/2
+3) Tuesday, Thursday
