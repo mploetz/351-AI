@@ -12,7 +12,7 @@ class Board:
     def __init__(self):
         self.board = self.empty_board()
         self.won = False
-        self.parent = self.empty_board()
+        self.parent = None
         self.lastMove = None
         self.numMoves = 0
         self.turn = 0
@@ -46,13 +46,13 @@ class Board:
         # update moves
         self.numMoves += 1
         # keep track of all moves
-        self.moves.append(self.lastMove)
+        self.parent = (piece, c)
         # put the piece on the board at given move(c)
         self.board[c].append(piece)
             
     def unmake_last_move(self):
         # TODO
-        pass
+        self.board = self.parent
                 
     def last_move_won(self):
         # TODO
