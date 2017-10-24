@@ -10,12 +10,11 @@ class Board:
     WIDTH = 7
     HEIGHT = 6
     def __init__(self):
-        self.board = self.empty_board()
-        self.won = False
+        self.board = [[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]]
         self.parent = None
         self.lastMove = None
-        self.numMoves = 0
-        self.turn = 0
+        self.turn = True
+        self.movesLeft = [5, 5, 5, 5, 5, 5, 5]
     
     # creates an empty board
     def empty_board(self):
@@ -23,87 +22,77 @@ class Board:
         for row in range(self.HEIGHT):
             self.board.append([])
             for col in range(self.WIDTH):
-                self.board[row].append('_')
+                self.board[row].append(0)
 
     def generate_moves(self):
         # TODO
         children = []
-        for i in range(self.WIDTH):
-            if len(self.board[i]) < self.HEIGHT:
-                child = self.board.deepcopy()
-                child.make_move(i)
-                children.append(i)
+        index = 0
+        for i in self.movesLeft:
+            if i >= 0:
+                children.append(index)
+            index += 1
         return children
+
 
     # makes a move
     # Does not check if the move is valid
     def make_move(self,c):
         # TODO
-        # whos turn moving
-        piece = self.numMoves % 2
-        # keep track of that move
-        self.lastMove = (piece, c)
-        # update moves
-        self.numMoves += 1
-        # keep track of all moves
-        self.parent = (piece, c)
-        # put the piece on the board at given move(c)
-        self.board[c].append(piece)
+        move = self.movesLeft[c]
+
+        self.parent = deepcopy(self)
+
+        self.lastMove = move
+
+        self.movesLeft[c] -= 1
+
+        if self.turn:
+            self.board[move][c] = "R"
+        else:
+            self.board[move][c] = "B"
+
+        self.turn = not self.turn
+
             
     def unmake_last_move(self):
         # TODO
-        self.board = self.parent
+        oldBoard = deepcopy(self.parent)
+
+        self.board = oldBoard.board
+
+        self.lastMove = oldBoard.lastMove
+
+        self.turn = oldBoard.turn
+
+        self.movesLeft = oldBoard.movesLeft
+
+        self.parent = oldBoard.parent
                 
     def last_move_won(self):
         # TODO
-        horscore = 0
-        verscore = 0
-        rightdiag = 0
-        leftdiag = 0
-        phor = 0
-        pver = 0
-        pleft = 0
-        pright = 0
-        for row in range(self.HEIGHT):
-            horscore = 0
-            for col in range(self.WIDTH):
-                verscore = 0
-                if self.board[row][col] == self.turn:
-                    horscore += 1
-                else:
-                    horscore = 0
-                for row2 in range(self.HEIGHT):
-                    if self.board[row2][col] == self.turn:
-                        verscore += 1
-                    else:
-                        verscore = 0
-        # checks \
-        for i in range(3):
-            for j in range(4):
-                prev = self.board[i][j]
-                for k in range(1, 4):
-                    if self.board[i+k][j+k] != 0 and self.board[i+k][j+k] == prev:
-                        rightDiag += 1
-                    if (rightDiag == 4):
-                        return True
-                    else:
-                        break
-                    rightDiag = 1
-                    prev = 0
-        return False
-        
-        for row in range(3, 6):
-            for col in range(4):
-                prev = self.board[row][col]
-            for k in range(1,4):
-                if self.board[row-k][col+k] != 0 and self.board[row-k][col+k] == prev:
-                    leftdiag += 1
-                if leftdiag == 4:
-                    return self.board[row-k][col+k]
-            else:
-                break
-            leftdiag = 1
-            prev = 0
+        total = 0
+        player = None
+        if self.turn:
+           player = "R"
+        else:
+            player = "B"
+        for x in range(0, self.WIDTH-3):
+           for y in range(self.HEIGHT):
+                if self.board[y][x] == player and self.board[y][x+1] == player and self.board[y][x+2] == player and self.board[y][x+3] == player:
+                    return True
+        for x in range(self.WIDTH):
+            for y in range(0, self.HEIGHT - 3):
+                if self.board[x][y] == player and self.board[x+1][y] == player and self.board[x+2][y] == player and self.board[x+3][y] == player:
+                    return True
+        for x in range(3, self.WIDTH):
+            for y in range(self.HEIGHT-3):
+                if self.board[x][y] == player and self.board[x+1][y-1] == player and self.board[x+2][y-2] == player and self.board[x+3][y-3] == player:
+                    return True
+        for x in range(self.HEIGHT-3):
+            for y in range(self.WIDTH-3):
+                if self.board[x][y] == player and self.board[x+1][y+1] == player and self.board[x+2][y+2] == player and self.board[x+3][y+3] == player:
+                    return True
 
     def __str__(self):
-        return str(np.matrix(self.board))   
+        return str(np.matrix(self.board))
