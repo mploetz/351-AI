@@ -68,7 +68,8 @@ def alphabeta_minimax(b,depth,a,be):
                 if bestValue < v[1]:
                     bestChild = child
                     bestValue = v[1]
-                a = max(bestValue, a)
+                    a = max(bestValue, a)
+                
                 if be <= a:
                     break
                 b.unmake_last_move()
@@ -82,7 +83,8 @@ def alphabeta_minimax(b,depth,a,be):
                 if bestValue > v[1]:
                     bestChild = child
                     bestValue = v[1]
-                be = min(be, bestValue)
+                    be = min(be, bestValue)
+               
                 if be <= a:
                     break
                 b.unmake_last_move()
