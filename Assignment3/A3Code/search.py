@@ -68,11 +68,14 @@ def alphabeta_minimax(b,depth,a,be):
                 if bestValue < v[1]:
                     bestChild = child
                     bestValue = v[1]
-                    a = max(bestValue, a)
                 
+                b.unmake_last_move()
+
+                a = max(bestValue, a)
+                # crossed
                 if be <= a:
                     break
-                b.unmake_last_move()
+    
             return (bestChild, bestValue)
         # min player
         else:
@@ -83,11 +86,15 @@ def alphabeta_minimax(b,depth,a,be):
                 if bestValue > v[1]:
                     bestChild = child
                     bestValue = v[1]
-                    be = min(be, bestValue)
-               
+                 
+                b.unmake_last_move()
+
+                be = min(be, bestValue)
+                
+                # crossed
                 if be <= a:
                     break
-                b.unmake_last_move()
+               
             return (bestChild, bestValue)
     return alphabeta_minimax_helper(b, depth, a, be)[0]
 
