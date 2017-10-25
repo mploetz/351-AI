@@ -17,14 +17,6 @@ class Board:
         self.lastMove = None
         self.turn = True
         self.movesLeft = [5, 5, 5, 5, 5, 5, 5]
-    
-    # creates an empty board
-    def empty_board(self):
-        self.board = []
-        for row in range(self.HEIGHT):
-            self.board.append([])
-            for col in range(self.WIDTH):
-                self.board[row].append(0)
 
     def generate_moves(self):
         # TODO
