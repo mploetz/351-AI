@@ -6,6 +6,8 @@ Created on Sat Sep 24 10:34:05 2016
 """
 import search
 import numpy as np
+import copy
+
 class Board:
     WIDTH = 7
     HEIGHT = 6
@@ -41,7 +43,7 @@ class Board:
         # TODO
         move = self.movesLeft[c]
 
-        self.parent = deepcopy(self)
+        self.parent = copy.deepcopy(self)
 
         self.lastMove = move
 
@@ -57,7 +59,7 @@ class Board:
             
     def unmake_last_move(self):
         # TODO
-        oldBoard = deepcopy(self.parent)
+        oldBoard = copy.deepcopy(self.parent)
 
         self.board = oldBoard.board
 
@@ -71,28 +73,28 @@ class Board:
                 
     def last_move_won(self):
         # TODO
-        total = 0
         player = None
         if self.turn:
            player = "R"
         else:
             player = "B"
-        for x in range(0, self.WIDTH-3):
-           for y in range(self.HEIGHT):
+        for y in range(self.HEIGHT):
+           for x in range(self.WIDTH-3):
                 if self.board[y][x] == player and self.board[y][x+1] == player and self.board[y][x+2] == player and self.board[y][x+3] == player:
                     return True
-        for x in range(self.WIDTH):
-            for y in range(0, self.HEIGHT - 3):
+        for y in range(self.WIDTH):
+            for x in range(0, self.HEIGHT - 3):
                 if self.board[x][y] == player and self.board[x+1][y] == player and self.board[x+2][y] == player and self.board[x+3][y] == player:
                     return True
-        for x in range(3, self.WIDTH):
-            for y in range(self.HEIGHT-3):
+        for y in range(3, self.WIDTH):
+            for x in range(self.HEIGHT-3):
                 if self.board[x][y] == player and self.board[x+1][y-1] == player and self.board[x+2][y-2] == player and self.board[x+3][y-3] == player:
                     return True
         for x in range(self.HEIGHT-3):
             for y in range(self.WIDTH-3):
                 if self.board[x][y] == player and self.board[x+1][y+1] == player and self.board[x+2][y+2] == player and self.board[x+3][y+3] == player:
                     return True
+        return False
 
     def __str__(self):
         return str(np.matrix(self.board))
