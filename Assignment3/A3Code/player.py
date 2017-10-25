@@ -18,7 +18,7 @@ class Player:
 
     def get_move(self):
         # TODO
-        return search.minimax_root(self.b, 5)
+        return search.minimax_root_alphabeta(self.b, 5)
     def __str__(self):
         # TODO
         return self.b.__str__()
